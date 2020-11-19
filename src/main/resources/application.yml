@@ -1,0 +1,14 @@
+server:
+    port: 8080
+spring:
+    datasource:
+        url: jdbc:postgresql://xxx.xxx.xxx.xxx:5432/postgres
+        username: postgres
+        password: postgres
+        driver: org.postgresql.Driver
+logging:
+    level:
+        root: debug
+mybatis:
+    configuration:
+        map-underscore-to-camel-case: true

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>报表查看</title>
+    <!-- 导入easyUI的css -->
+    <link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/gray/easyui.css">
+    <!-- 导入图标的css -->
+    <link rel="stylesheet" type="text/css" href="themes/icon.css">
+    <!-- 导入jQuery-->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <!-- 导入easyui-->
+    <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+    <!-- easyui的国际化中文包 -->
+    <script src="locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="js/index.js" type="text/javascript"></script>
+    <script src="js/highcharts.js" type="text/javascript"></script>
+    <style type="text/css">
+        .footer{text-align:center;color:#15428B; margin:0px; padding:0px;line-height:23px; font-weight:bold;}
+        .footer a{text-align:center;color:#15428B; text-decoration: none; padding: 0 10px;}
+    </style>
+</head>
+<body class="easyui-layout">
+<div region="north" split="true" border="false" style="overflow: hidden; height: 50px;
+        background: url(imgs/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+        line-height: 45px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+        <span style="float:right; padding-right:20px;" style="color: white;display: block;">欢迎
+		<span id="user" style="font-size: 25px">Admin</span>
+		<a href="#" id="editpass" style="color: white">修改密码</a>
+		<a href="#" id="loginOut" style="color: white" onclick="lgout()">安全退出</a>
+		</span>
+    <span style="padding-left:10px; font-size: 16px; "><img src="imgs/blocks.gif" width="20" height="20" align="absmiddle" />银行业务平台</span>
+</div>
+
+<div data-options="region:'west',title:'功能菜单',split:true,iconCls:'icon-cog'" style="width:220px;">
+    <div id="menu" class="easyui-accordion" data-options="fit:true">
+        <div title="后台查看" data-options="iconCls:'icon-user',selected:true"
+             style="overflow:auto;padding:10px;">
+            <a id="btn" href="qukuan/selectStatment.html" class="easyui-linkbutton" style="width: 180px;margin: 5px;" data-options="iconCls:'icon-wooden-box'">报表查看</a>
+            <a id="btn" href="qukuan/selectAcctAmt.html" class="easyui-linkbutton" style="width: 180px;margin: 5px;" data-options="iconCls:'icon-award-star'">拉链表查看</a>
+        </div>
+    </div>
+</div>
+<div data-options="region:'center'" style="padding:5px;background:#eee;">
+    <div id="content" class="easyui-tabs" style="width: 100%;height: 100%;">
+        <div style="padding:20px;display:none;" data-options="title:'主页',iconCls:'icon-home',fit:true">
+            <span id="container" style="width: 450px; height: 400px; margin: 0 auto;display: inline-block;"></span>
+            <span id="container2" style="width: 450px; height: 400px; margin: 0 auto;display: inline-block;"></span>
+        </div>
+    </div>
+</div>
+<div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
+    <div class="footer"><a href="http://www.qbzaixian.com">银行在线交易系统</a>欢迎提出宝贵的意见！</div>
+</div>
+</div>
+
+</body>
+
+<script language="JavaScript">
+
+    function lgout() {
+        window.location.href = "login.html";
+    }
+
+</script>
+</html>

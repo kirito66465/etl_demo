@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>银行业务</title>
+	<!-- 导入easyUI的css -->
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/gray/easyui.css">
+	<!-- 导入图标的css -->
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<!-- 导入jQuery-->
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<!-- 导入easyui-->
+	<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+	<!-- easyui的国际化中文包 -->
+	<script src="locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<script src="js/index.js" type="text/javascript"></script>
+	<script src="js/highcharts.js" type="text/javascript"></script>
+	<style type="text/css">
+		.footer{text-align:center;color:#15428B; margin:0px; padding:0px;line-height:23px; font-weight:bold;}
+		.footer a{text-align:center;color:#15428B; text-decoration: none; padding: 0 10px;}
+	</style>
+</head>
+<body class="easyui-layout">
+<div region="north" split="true" border="false" style="overflow: hidden; height: 50px;
+        background: url(imgs/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+        line-height: 45px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+        <span style="float:right; padding-right:20px;" style="color: white;display: block;">欢迎
+		<span id="user" style="font-size: 25px"></span>
+		<a href="#" id="editpass" style="color: white">修改密码</a>
+		<a href="#" id="loginOut" style="color: white" onclick="lgout()">安全退出</a>
+		</span>
+        <span style="padding-left:10px; font-size: 16px; "><img src="imgs/blocks.gif" width="20" height="20" align="absmiddle" />银行业务平台</span>
+    </div>
+
+<div data-options="region:'west',title:'功能菜单',split:true,iconCls:'icon-cog'" style="width:220px;">
+	<div id="menu" class="easyui-accordion" data-options="fit:true">
+		<div title="客户交易功能" data-options="iconCls:'icon-user',selected:true" style="overflow:auto;padding:10px;">
+			<a id="btn" href="cunkuan/cunkuan.html" class="easyui-linkbutton" style="width: 180px;margin: 5px;" data-options="iconCls:'icon-cards-bind-address'">存款</a>
+			<a id="btn" href="qukuan/qukuan.html" class="easyui-linkbutton" style="width: 180px;margin: 5px;" data-options="iconCls:'icon-award-star'">取款</a>
+			<a id="btn" href="zhuanzhang/zhuanzhang.html" class="easyui-linkbutton" style="width: 180px;margin: 5px;" data-options="iconCls:'icon-cards-bind-address'">转账</a>
+			<a id="btn" href="qukuan/selectChange.html" class="easyui-linkbutton" style="width: 180px;margin: 5px;" data-options="iconCls:'icon-wooden-box'">查询明细</a></div>
+	</div>
+</div>
+<div data-options="region:'center'" style="padding:5px;background:#eee;">
+	<div id="content" class="easyui-tabs" style="width: 100%;height: 100%;">
+		<div style="padding:20px;display:none;" data-options="title:'主页',iconCls:'icon-home',fit:true">
+			<span id="container" style="width: 450px; height: 400px; margin: 0 auto;display: inline-block;"></span>
+			<span id="container2" style="width: 450px; height: 400px; margin: 0 auto;display: inline-block;"></span>
+		</div>
+	</div>
+</div>
+<div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
+	<div class="footer"><a href="http://www.qbzaixian.com">银行在线交易系统</a>欢迎提出宝贵的意见！</div>
+</div>
+</div>
+
+</body>
+
+<script language="JavaScript">
+	
+	function lgout() {
+		window.location.href = "login.html";
+	}
+	$(document).ready(function() {
+
+		$.post("/getuser",function (data) {
+			$("#user").text(data.actName);
+		});
+
+		var title = {
+			text: '银行数据'
+		};
+		var subtitle = {
+			text: ''
+		};
+		var xAxis = {
+			categories: ['1月', '2月', '3月', '4月', '5月', '6月','7月', '8月', '9月', '10月', '11月', '12月']
+		};
+		var yAxis = {
+			title: {
+				text: '商品数量(千件)'
+			},
+			plotLines: [{
+				value: 0,
+				width: 1,
+				color: '#808080'
+			}]
+		};
+
+		var tooltip = {
+			valueSuffix: '\xB0C'
+		}
+
+		var legend = {
+			layout: 'vertical',
+			align: 'right',
+			verticalAlign: 'middle',
+			borderWidth: 0
+		};
+
+		var series =  [
+			{
+				name: '上海',
+				data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2,
+					26.5, 23.3, 18.3, 13.9, 9.6]
+			},
+			{
+				name: '北京',
+				data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8,
+					24.1, 20.1, 14.1, 8.6, 2.5]
+			},
+			{
+				name: '无锡',
+				data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0,
+					16.6, 14.2, 10.3, 6.6, 4.8]
+			}
+		];
+
+		var json = {};
+
+		json.title = title;
+		json.subtitle = subtitle;
+		json.xAxis = xAxis;
+		json.yAxis = yAxis;
+		json.tooltip = tooltip;
+		json.legend = legend;
+		json.series = series;
+
+		$('#container').highcharts(json);
+
+		var chart2 = {
+			type: 'column'
+		};
+		var title2 = {
+			text: '人员数据'
+		};
+		var subtitle2 = {
+			text: ''
+		};
+		var xAxis2 = {
+			categories: ['1月', '2月', '3月', '4月', '5月', '6月','7月', '8月', '9月', '10月', '11月', '12月'],
+			crosshair: true
+		};
+		var yAxis2 = {
+			min: 0,
+			title: {
+				text: '银行金额 (万元)'
+			}
+		};
+		var tooltip2 = {
+			headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+			pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					'<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+			footerFormat: '</table>',
+			shared: true,
+			useHTML: true
+		};
+		var plotOptions2 = {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		};
+		var credits2 = {
+			enabled: false
+		};
+
+		var series2= [{
+			name: '上海',
+			data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+		}, {
+			name: '北京',
+			data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+		}, {
+			name: '无锡',
+			data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+		}, {
+			name: '南京',
+			data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+		}];
+
+		var json2 = {};
+		json2.chart = chart2;
+		json2.title = title2;
+		json2.subtitle = subtitle2;
+		json2.tooltip = tooltip2;
+		json2.xAxis = xAxis2;
+		json2.yAxis = yAxis2;
+		json2.series = series2;
+		json2.plotOptions = plotOptions2;
+		json2.credits = credits2;
+		$('#container2').highcharts(json2);
+
+	});
+</script>
+</html>

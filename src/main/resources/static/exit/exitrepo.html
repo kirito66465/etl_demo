@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<!-- 导入easyUI的css -->
+		<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+		<!-- 导入图标的css -->
+		<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+		<!-- 导入jQuery-->
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<!-- 导入easyui-->
+		<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+		<!-- easyui的国际化中文包 -->
+		<script src="../locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="../css/index.css">
+		<script type="text/javascript" src="../js/common.js"></script>
+	</head>
+	<body>
+		<table id="exitRepoInfo" class="easyui-datagrid" style="margin: 5px;"
+		data-options="title:'库存退货',url:'/exitgoods/repo/find',toolbar:'#toolbar',striped:true,fit:true,fitColumns:true,pagination:true,singleSelect:false,rownumbers:true">
+			<thead>
+				<tr>
+					<th data-options="field:'id',checkbox:true"></th>
+					<th data-options="field:'orderNo',align:'center'">订单编号</th>
+					<th data-options="field:'goodsNo',align:'center'">商品编号</th>
+					<th data-options="field:'goodsName',align:'center'">商品名称</th>
+					<th data-options="field:'goodsSimple',align:'center'">商品简称</th>
+					<th data-options="field:'quantity',align:'center'">商品数量</th>
+					<th data-options="field:'orderDate',align:'center'">采购时间</th>
+					<th data-options="field:'goodsParam',align:'center'">商品规格参数</th>
+					<th data-options="field:'goodsPackage',align:'center'">商品包装</th>
+					<th data-options="field:'batchId',align:'center'">批次</th>
+					<th data-options="field:'goodsCompany',align:'center'">商品公司</th>
+					<th data-options="field:'supplierName',align:'center'">供应商名称</th>
+					<th data-options="field:'goodsOrigin',align:'center'">商品产地</th>
+				</tr>
+			</thead>
+		</table>
+		<!-- 表格上的工具组件 -->
+		<div id="toolbar">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="exitGoodsRepo()">退货</a>
+			<span>批次：</span>
+			<input id="batchId" style="border:1px solid #ccc">
+			<span>商品名称(简称)：</span>
+			<input id="goodsSimple" style="border:1px solid #ccc">
+			<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询</a>
+		</div>
+
+		<!-- 添加对话框 -->
+		<div id="dlg" class="easyui-dialog" style="width:400px;padding:10px 20px"
+			 closed="true" buttons="#dlg-buttons" modal="true">
+			<form id="fm" method="post">
+				<input type="hidden" name="id" id="id" />
+				<div style="margin-bottom:5px">
+					<input  disabled class="easyui-textbox" name="orderNo" style="width:100%" data-options="label:'订单编号:',required:true">
+				</div>
+				<div style="margin-bottom:5px">
+					<input disabled class="easyui-textbox" name="goodsNo" style="width:100%" data-options="label:'商品编号:',required:true">
+				</div>
+				<div style="margin-bottom:5px">
+					<input disabled class="easyui-textbox" name="goodsName" style="width:100%" data-options="label:'商品名称:',required:true">
+				</div>
+				<div style="margin-bottom:5px">
+					<input disabled class="easyui-textbox" name="goodsSimple" style="width:100%" data-options="label:'商品简称:',required:true">
+				</div>
+				<div style="margin-bottom:5px">
+					<input class="easyui-textbox" name="quantity" style="width:100%" data-options="label:'商品数量:',required:true">
+				</div>
+			</form>
+		</div>
+		<div id="dlg-buttons">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveExit()">确认退货信息</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>
+		</div>
+	</body>
+	<script type="text/javascript">
+
+		function saveExit() {
+			//	必须验证必填项是否填写
+			let b = $("#fm").form("enableValidation").form("validate");
+			if( !b ){
+				$.messager.alert("警告","表单的必填项未填写","warning");
+				return ;
+			}
+			$.post("/exitgoods/repo/exit" , $("#fm").serialize() , function (data) {
+
+				if( data == 1 ){
+					$.messager.alert("提示","退货成功","info");
+					$("#dlg").dialog("close");
+					$("#exitRepoInfo").datagrid("reload");
+				}else{
+					$.messager.alert("错误","退货失败","error");
+				}
+			})
+		}
+
+		function exitGoodsRepo(){
+			let selectRow = $("#exitRepoInfo").datagrid("getSelected");
+			if( selectRow == null ){
+				//	没有选择
+				$.messager.alert("警告","必须选择一行","warning");
+				return ;
+			}
+			// 需要将数据回填的表单中
+			$("#fm").form("load",selectRow);
+			$("#dlg").dialog("open").dialog("setTitle","确认退货信息");
+
+		}
+
+		function doSearch() {
+			$('#exitRepoInfo').datagrid({
+				queryParams: {
+					batchId: $("#batchId").val(),
+					goodsSimple: $("#goodsSimple").val()
+				}
+			});
+		}
+
+
+
+	</script>
+</html>

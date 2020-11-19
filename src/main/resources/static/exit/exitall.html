@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<!-- 导入easyUI的css -->
+		<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+		<!-- 导入图标的css -->
+		<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+		<!-- 导入jQuery-->
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<!-- 导入easyui-->
+		<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+		<!-- easyui的国际化中文包 -->
+		<script src="../locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="../css/index.css">
+		<script type="text/javascript" src="../js/common.js"></script>
+	</head>
+	<body>
+		<table id="exitAllInfo" class="easyui-datagrid" style="margin: 5px;"
+		data-options="title:'退货信息',url:'/exitgoods/findExit',toolbar:'#toolbar',striped:true,fit:true,fitColumns:true,pagination:true,singleSelect:false,rownumbers:true">
+			<thead>
+				<tr>
+					<th data-options="field:'id',checkbox:true"></th>
+					<th data-options="field:'exitNo',align:'center'">退货编号</th>
+					<th data-options="field:'goodsNo',align:'center'">商品编号</th>
+					<th data-options="field:'exitQuantity',align:'center'">退货数量</th>
+					<th data-options="field:'goodsParams',align:'center'" formatter="formatSimple">商品规格参数</th>
+					<th data-options="field:'goodsPackage',align:'center'" formatter="formatPackage">商品包装</th>
+					<th data-options="field:'batchId',align:'center'">批次</th>
+					<th data-options="field:'goodsCompany',align:'center'" formatter="formatCompany">商品公司</th>
+					<th data-options="field:'supplierName',align:'center'" formatter="formatSupplierName">供应商名称</th>
+					<th data-options="field:'goodsOrigin',align:'center'" formatter="formatOrigin">商品产地</th>
+					<th data-options="field:'exitFlag',align:'center'">退货类别</th>
+				</tr>
+			</thead>
+		</table>
+		<!-- 表格上的工具组件 -->
+		<div id="toolbar">
+			<span>批次：</span>
+			<input id="batchId" style="border:1px solid #ccc">
+			<span>商品编号：</span>
+			<input id="goodsNo" style="border:1px solid #ccc">
+			<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询</a>
+		</div>
+	</body>
+	<script type="text/javascript">
+
+		function doSearch() {
+			$('#exitAllInfo').datagrid({
+				queryParams: {
+					batchId: $("#batchId").val(),
+					goodsNo: $("#goodsNo").val()
+				}
+			});
+		}
+
+		function formatSimple( val, row ) {
+			if( row.goods != null ){
+				return row.goods.goodsSimple;
+			}
+		}
+
+		function formatPackage( val, row ) {
+			if( row.goods != null ){
+				return row.goods.goodsPackage;
+			}
+		}
+
+		function formatCompany( val, row ) {
+			if( row.goods != null ){
+				return row.goods.goodsCompany;
+			}
+		}
+
+		function formatSupplierName( val, row ) {
+			if( row.goods != null ){
+				return row.goods.supplierName;
+			}
+		}
+
+		function formatOrigin( val, row ) {
+			if( row.goods != null ){
+				return row.goods.goodsOrigin;
+			}
+		}
+
+	</script>
+</html>

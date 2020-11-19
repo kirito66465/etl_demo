@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<!-- 导入easyUI的css -->
+		<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+		<!-- 导入图标的css -->
+		<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+		<!-- 导入jQuery-->
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<!-- 导入easyui-->
+		<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+		<!-- easyui的国际化中文包 -->
+		<script src="../locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="../css/index.css">
+		<script type="text/javascript" src="../js/common.js"></script>
+	</head>
+	<body>
+		<table id="distriInfo" class="easyui-datagrid" style="margin: 5px;"
+		data-options="url:'/distri/find',title:'员工基本信息',toolbar:'#toolbar',striped:true,fit:true,fitColumns:true,pagination:true,singleSelect:true,rownumbers:true">
+			<thead>   
+				<tr>   
+					<th data-options="field:'empNum',checkbox:true" ></th>
+					<th data-options="field:'empName',align:'center'" formatter="formatEmpNum">姓名</th>
+					<th data-options="field:'dempName',align:'center'" formatter="formatDempName">部门</th>
+					<th data-options="field:'empRole',align:'center'" formatter="formatEmpRole">角色</th>
+
+				</tr>   
+			</thead>   
+		</table>  
+		<!-- 表格上的工具组件 -->
+		<div id="toolbar">
+			<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">未分配</a>
+			<a href="#" class="easyui-linkbutton" onclick="doBack()" iconCls="icon-undo">返回</a>
+		</div>
+
+	</body>
+	<script type="text/javascript">
+
+		function doSearch() {
+			$("#distriInfo").datagrid({
+				queryParams:{
+
+				}
+			})
+		}
+		function doBack() {
+			$("#distriInfo").datagrid({
+				queryParams:{
+				}
+			})
+		}
+
+
+		function formatEmpNum( val, row ) {
+			if( row.emp != null ){
+				return row.emp.empName;
+			}
+		}
+		function formatDempName( val, row ) {
+			if( row.demp != null ){
+				return row.demp.dempName;
+			}
+		}
+
+		function formatEmpRole( val, row ) {
+			if( row.emp != null ){
+				return row.emp.empRole;
+			}
+		}
+	</script>
+</html>

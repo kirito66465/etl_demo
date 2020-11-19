@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<!-- 导入easyUI的css -->
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<!-- 导入图标的css -->
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<!-- 导入jQuery-->
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<!-- 导入easyui-->
+	<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+	<!-- easyui的国际化中文包 -->
+	<script src="../locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="../css/index.css">
+	<script type="text/javascript" src="../js/common.js"></script>
+</head>
+<body style="background: dodgerblue">
+<form>
+	<div class="easyui-window" title="存款" data-options="modal:true,iconCls:'Lockgo',closable:false,maximizable:false,minimizable:false,collapsible:false,draggable:false" style="width:500px;padding:20px 70px 20px 70px;">
+		<div style="margin-bottom:10px">
+			<input class="easyui-textbox" style="width:100%;height:30px;padding:12px"
+				   data-options="label:'取款金额:',prompt:'请输入金额',iconCls:'icon-beaker',iconWidth:38,required:true" id="act_cur">
+		</div>
+		<!--			<div style="margin-bottom:20px">-->
+		<!--				<input class="easyui-textbox" type="password" style="width:100%;height:30px;padding:12px" data-options="prompt:'请输入金额',iconCls:'icon-numble',iconWidth:38,required:true" id="password">-->
+		<!--			</div>-->
+		<div>
+			<a href="javascript:;" onclick="dologin()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="padding:5px 0px;width:100%;">
+				<span style="font-size:14px;">确认</span>
+			</a>
+		</div>
+	</div>
+</form>
+</body>
+<script type="text/javascript">
+	function dologin(){
+
+		var aa = $("#act_cur").val();
+
+		var check = /^\d+$/;
+
+		if(aa == null || isNaN(aa) || aa == "" || !check.test(aa)) {
+			$.messager.alert("提示", "请输入正确金额", "error");
+		}else {
+			$.post("/cunkuan", {
+				act_cur: $("#act_cur").val()
+				// password: $("#password").val()
+			}, function (data) {
+				if (data = 1) {
+					var file = $("#act_cur");
+					file.after(file.clone().val(""));
+					file.remove();
+					$.messager.alert("提示", "操作成功", "alert");
+				} else {
+					$.messager.alert("提示", "操作失败", "error");
+				}
+			})
+		}
+	}
+
+</script>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<!-- 导入easyUI的css -->
+		<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+		<!-- 导入图标的css -->
+		<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+		<!-- 导入jQuery-->
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<!-- 导入easyui-->
+		<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+		<!-- easyui的国际化中文包 -->
+		<script src="../locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="../css/index.css">
+	</head>
+	<body style="background: dodgerblue">
+	<form>
+		<div class="easyui-window" title="转账" data-options="modal:true,iconCls:'Lockgo',closable:false,maximizable:false,minimizable:false,collapsible:false,draggable:false" style="width:500px;padding:20px 70px 20px 70px;">
+			<div style="margin-bottom:10px">
+				<input class="easyui-textbox" style="width:100%;height:30px;padding:12px"
+					   data-options="label:'对方账户：',prompt:'请输入对方账号',iconCls:'icon-beaker',iconWidth:38,required:true,min:0" id="oppAct">
+			</div>
+			<div style="margin-bottom:10px">
+				<input class="easyui-numberbox" style="width:100%;height:30px;padding:12px"
+					   data-options="label:'转账金额：',prompt:'请输入金额',iconCls:'icon-beaker',iconWidth:38,required:true,min:0" id="actCur">
+			</div>
+			<div style="margin-bottom:10px">
+				<input class="easyui-passwordbox" style="width:100%;height:30px;padding:12px"
+					   data-options="label:'密码：',prompt:'请输入密码',iconCls:'icon-beaker',iconWidth:38,required:true" id="actPassword">
+			</div>
+			<!--			<div style="margin-bottom:20px">-->
+			<!--				<input class="easyui-textbox" type="password" style="width:100%;height:30px;padding:12px" data-options="prompt:'请输入金额',iconCls:'icon-numble',iconWidth:38,required:true" id="password">-->
+			<!--			</div>-->
+			<div>
+				<a href="javascript:;" onclick="dologin()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="padding:5px 0px;width:100%;">
+					<span style="font-size:14px;">确认</span>
+				</a>
+			</div>
+		</div>
+	</form>
+	</body>
+	<script type="text/javascript">
+		function dologin(){
+
+			// var aa = $("#actCur").val();
+			//
+			// var check = /^\d+$/;
+			//
+			// if(aa == null || isNaN(aa) || aa == "" || !check.test(aa)) {
+			// 	$.messager.alert("提示", "请输入正确金额", "error");
+			// }
+			// var bb=$("#oppAct").val();
+			// if(bb == null || isNaN(bb) || bb == "" || !check.test(bb)) {
+			// 	$.messager.alert("提示", "请输入正确账号", "error");
+			// }
+
+
+			$.post("/zhuan", {
+				actCur: $("#actCur").val(),
+				oppAct:$("#oppAct").val(),
+				actPassword:$("#actPassword").val()
+			}, function (data) {
+				if (data == 1) {
+					$.messager.alert("提示", "操作成功", "alter");
+					$('#actCur').numberbox('clear');
+					$('#oppAct').numberbox('clear');
+					$('#actPassword').passwordbox('clear');
+				} else if(data==0){
+					$.messager.alert("提示", "不能为空", "error");
+				} else if(data==-1){
+					$.messager.alert("提示", "密码错误", "error");
+				} else if(data==-2){
+					$.messager.alert("提示", "余额不足", "error");
+				} else if(data==-3){
+					$.messager.alert("提示", "扣款失败", "error");
+				} else if(data==-4){
+					$.messager.alert("提示", "目标用户不存在", "error");
+				} else {
+					$.messager.alert("提示", "操作失败", "error");
+				}
+			})
+
+		}
+
+	</script>
+</html>

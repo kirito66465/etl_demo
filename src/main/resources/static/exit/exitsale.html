@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<!-- 导入easyUI的css -->
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<!-- 导入图标的css -->
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<!-- 导入jQuery-->
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<!-- 导入easyui-->
+	<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+	<!-- easyui的国际化中文包 -->
+	<script src="../locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="../css/index.css">
+	<script type="text/javascript" src="../js/common.js"></script>
+</head>
+<body>
+<table id="exitSaleInfo" class="easyui-datagrid" style="margin: 5px;"
+	   data-options="title:'销售退货',url:'/exitgoods/sale/find',toolbar:'#toolbar',striped:true,fit:true,fitColumns:true,pagination:true,singleSelect:false,rownumbers:true">
+	<thead>
+	<tr>
+		<th data-options="field:'id',checkbox:true"></th>
+		<th data-options="field:'outStoreId',align:'center'">出库编号</th>
+		<th data-options="field:'goodsNo',align:'center'">商品编号</th>
+		<th data-options="field:'goodsName',align:'center'" formatter="formatGoodsName">商品名称</th>
+		<th data-options="field:'goodsSimple',align:'center'" formatter="formatSimple">商品简称</th>
+		<th data-options="field:'outStoreQuantity',align:'center'">销售数量</th>
+		<th data-options="field:'outStoreDate',align:'center'">订单时间</th>
+		<th data-options="field:'goodsParam',align:'center'" formatter="formatParam">商品规格参数</th>
+		<th data-options="field:'goodsPackage',align:'center'" formatter="formatPackage">商品包装</th>
+		<th data-options="field:'batchId',align:'center'" formatter="formatBatchId">批次</th>
+		<th data-options="field:'goodsCompany',align:'center'" formatter="formatCompany">商品公司</th>
+		<th data-options="field:'supplierName',align:'center'" formatter="formatSupplierName">供应商名称</th>
+		<th data-options="field:'goodsOrigin',align:'center'" formatter="formatOrigin">商品产地</th>
+	</tr>
+	</thead>
+</table>
+<!-- 表格上的工具组件 -->
+<div id="toolbar">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="exitGoodsRepo()">退货</a>
+	<span>批次：</span>
+	<input id="batchIdOne" style="border:1px solid #ccc">
+	<span>商品名称：</span>
+	<input id="goodsName" style="border:1px solid #ccc">
+	<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询</a>
+</div>
+
+<!-- 添加对话框 -->
+<div id="dlg" class="easyui-dialog" style="width:400px;padding:10px 20px"
+	 closed="true" buttons="#dlg-buttons" modal="true">
+	<form id="fm" method="post">
+		<input type="hidden" name="batchId" id="batchIdTwo" />
+		<div style="margin-bottom:5px">
+			<input disabled class="easyui-textbox" name="outStoreId" style="width:100%" data-options="label:'出库编号:',required:true">
+		</div>
+		<div style="margin-bottom:5px">
+			<input disabled class="easyui-textbox" name="goodsNo" id="goodsNo" style="width:100%" data-options="label:'商品编号:',required:true">
+		</div>
+		<div style="margin-bottom:5px">
+			<input disabled class="easyui-textbox" name="goodsName" id="goodsNames" style="width:100%" data-options="label:'商品名称:',required:true">
+		</div>
+		<div style="margin-bottom:5px">
+			<input class="easyui-textbox" name="outStoreQuantity" id="outStoreQuantity" style="width:100%" data-options="label:'退货数量:',required:true">
+		</div>
+
+	</form>
+</div>
+<div id="dlg-buttons">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveExit()">确认退货信息</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>
+</div>
+</body>
+<script type="text/javascript">
+
+	function saveExit() {
+		//	必须验证必填项是否填写
+		let b = $("#fm").form("enableValidation").form("validate");
+		if( !b ){
+			$.messager.alert("警告","表单的必填项未填写","warning");
+			return ;
+		}
+		$.post("/exitgoods/sale/exit" , "goodsNo="+$("#goodsNo").val()+"&batchId="+$("#batchIdTwo").val()+"&outStoreQuantity="+$("#outStoreQuantity").val(), function (data) {
+
+			if( data == 1 ){
+				$.messager.alert("提示","退货成功","info");
+				$("#dlg").dialog("close");
+				$("#exitSaleInfo").datagrid("reload");
+			}else{
+				$.messager.alert("错误","退货失败","error");
+			}
+		})
+	}
+
+	function exitGoodsRepo(){
+		let selectRow = $("#exitSaleInfo").datagrid("getSelected");
+		if( selectRow == null ){
+			//	没有选择
+			$.messager.alert("警告","必须选择一行","warning");
+			return ;
+		}
+		// 需要将数据回填的表单中
+
+		$("#fm").form("load",{
+			outStoreId:selectRow.outStoreId,
+			goodsNo:selectRow.goodsNo,
+			goodsName:selectRow.goods.goodsName,
+			outStoreQuantity:selectRow.outStoreQuantity
+		});
+		$("#dlg").dialog("open").dialog("setTitle","确认退货信息");
+
+	}
+
+	function doSearch() {
+		$('#exitSaleInfo').datagrid({
+			queryParams: {
+				batchId: $("#batchIdOne").val(),
+				goodsName: $("#goodsName").val()
+			}
+		});
+	}
+
+	/**
+	 * 回填嵌套对象数据
+	 * @param val
+	 * @param row
+	 * @returns {Document.goodsSimple|jQuery}
+	 */
+	function formatSimple( val, row ) {
+		if( row.goods != null ){
+			return row.goods.goodsSimple;
+		}
+	}
+	function formatParam( val, row ) {
+		if( row.goods != null ){
+			return row.goods.goodsParam;
+		}
+	}
+	function formatPackage( val, row ) {
+		if( row.goods != null ){
+			return row.goods.goodsPackage;
+		}
+	}
+	function formatCompany( val, row ) {
+		if( row.goods != null ){
+			return row.goods.goodsCompany;
+		}
+	}
+	function formatOrigin( val, row ) {
+		if( row.goods != null ){
+			return row.goods.goodsOrigin;
+		}
+	}
+	function formatGoodsName( val, row ) {
+		if( row.goods != null ){
+			return row.goods.goodsName;
+		}
+	}
+
+	function formatSupplierName( val, row , index) {
+		if( row.goods != null ){
+			return row.goods.supplierName;
+		}
+	}
+
+	function formatBatchId( val, row , index) {
+		if( row.goods != null ){
+			return row.goods.batchId;
+		}
+	}
+
+</script>
+</html>
